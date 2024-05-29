@@ -22,8 +22,8 @@ public class Episode {
     @Column(nullable = false)
 
     String name;
-    int duration;
-    int  displayOrder;
+    Integer duration;
+    Integer  displayOrder;
     String videoUrl;
     boolean status;
     LocalDateTime createdAt;
