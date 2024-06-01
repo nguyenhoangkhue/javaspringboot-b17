@@ -1,0 +1,27 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+img{
+    max-width: 100%;
+    object-fit: cover;
+}
+
+.logo{
+    width: 200px;
+}
+
+.movie-poster{
+    height: 250px;
+}
+.movie-poster img{
+    height:100%;
+    width: 100%;
+}
+.review-avatar img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}

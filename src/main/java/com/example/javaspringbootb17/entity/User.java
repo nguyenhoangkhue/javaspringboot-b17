@@ -35,4 +35,5 @@ public class User {
 
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
+    String avatar;
 }

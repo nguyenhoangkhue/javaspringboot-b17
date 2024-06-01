@@ -51,9 +51,9 @@ class JavaspringbootB17ApplicationTests {
 		movie.setName("hiihihii");
 		movieRepository.save(movie);
 
-		movieRepository.deleteById(2);
-		movieRepository.delete(movie);
-		movieRepository.deleteAll(moviesByIds);
-		movieRepository.deleteAll();
+//		movieRepository.deleteById(2);
+//		movieRepository.delete(movie);
+//		movieRepository.deleteAll(moviesByIds);
+//		movieRepository.deleteAll();
 	}
 }
