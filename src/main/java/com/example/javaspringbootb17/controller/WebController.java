@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequiredArgsConstructor
 public class WebController {
     private final WebService webService;
-    @GetMapping
+    @GetMapping("")
     public String getHomePage(Model model){
         return "/web/index";
     }
