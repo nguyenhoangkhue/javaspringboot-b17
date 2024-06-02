@@ -67,16 +67,15 @@
             </div>
             <nav aria-label="Page navigation example" class="d-flex justify-content-center mt-3">
                 <ul class="pagination">
-                    <li class="page-item" th:classappend="${pageData.hasPrevious()} ? '' : 'disabled'">
-                        <a class="page-link" th:href="@{/phim-chieu-rap(page=${pageData.number - 1}, limit=${pageData.size})}">Previous</a>
+                    <li class="page-item" th:classappend="${currentPage==1} ? 'disabled' : '' ">
+                        <a class="page-link" th:href="@{/phim-chieu-rap(page=${currentPage - 1})}">Previous</a>
                     </li>
                     <li class="page-item" th:each="i : ${#numbers.sequence(1, pageData.totalPages)}"
-                        th:classappend="${pageData.number + 1 == i} ? 'active'">
+                        th:classappend="${currentPage == i} ? 'active'">
                         <a class="page-link" th:href="@{/phim-chieu-rap(page=${i}, limit=${pageData.size})}" th:text="${i}">1</a>
                     </li>
-                    <li class="page-item" th:classappend="${pageData.hasNext()} ? '' : 'disabled'">
-                        <a class="page-link"
-                           th:href="@{/phim-chieu-rap(page=${pageData.number + 1}, limit=${pageData.size})}">Next</a>
+                    <li class="page-item" th:classappend="${currentPage==pageData.totalPages} ? 'disabled' : '' ">
+                        <a class="page-link" th:href="@{/phim-chieu-rap(page=${currentPage + 1})}">Next</a>
                     </li>
                 </ul>
             </nav>
