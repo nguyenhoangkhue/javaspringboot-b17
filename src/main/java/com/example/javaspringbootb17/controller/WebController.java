@@ -1,5 +1,6 @@
 package com.example.javaspringbootb17.controller;
 
+import com.example.javaspringbootb17.entity.Movie;
 import com.example.javaspringbootb17.model.enums.MovieType;
 import com.example.javaspringbootb17.service.WebService;
 import lombok.RequiredArgsConstructor;
@@ -9,13 +10,23 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 public class WebController {
     private final WebService webService;
     @GetMapping("")
     public String getHomePage(Model model){
-        return "/web/index";
+        List<Movie> listHot=webService.getHotMovie();
+        List<Movie> listBo=webService.findByType(MovieType.PHIM_BO,true,1,6).getContent();
+        List<Movie> listLe=webService.findByType(MovieType.PHIM_LE,true,1,6).getContent();
+        List<Movie> listChieuRap=webService.findByType(MovieType.PHIM_CHIEU_RAP,true,1,6).getContent();
+        model.addAttribute("listBo",listBo);
+        model.addAttribute("listLe",listLe);
+        model.addAttribute("listChieuRap",listChieuRap);
+        model.addAttribute("listHot",listHot);
+        return "web/index";
     }
     //http://localhost:8095/phim-bo
     //http://localhost:8095/phim-bo?page=1&limit=12

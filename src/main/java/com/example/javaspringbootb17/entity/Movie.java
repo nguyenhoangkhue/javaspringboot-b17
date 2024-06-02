@@ -30,7 +30,7 @@ public class Movie {
 
     String poster;
     Integer releaseYear;
-    Double ratting;
+    Double rating;
     String trailerURL;
 
     @Enumerated(EnumType.STRING)
