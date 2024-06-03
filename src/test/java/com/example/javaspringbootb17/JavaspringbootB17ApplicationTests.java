@@ -58,7 +58,7 @@ class JavaspringbootB17ApplicationTests {
 			String name = faker.name().fullName();
 			String password = faker.internet().password();
 			User user = User.builder()
-					.name(name)
+					.name(name)                                                        
 					.email(faker.internet().emailAddress())
 					.avatar("https://placehold.co/600x400?text=" + name)
 					.password(password)

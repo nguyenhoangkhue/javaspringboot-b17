@@ -51,18 +51,18 @@
             <div class="row">
                 <div class="col-3" >
                     <div class="movie-poster rounded overflow-hidden" style="height: 410px;">
-                        <img th:src="movie.poster" th:alt="movie.name">
+                        <img th:src="${movie.poster}" th:alt="${movie.name}">
                     </div>
                 </div>
                 <div class="col-9">
-                    <h4 class="mb-2" th:text="movie.name">moi lien ket bi an</h4>
+                    <h4 class="mb-2" th:text="${movie.name}">moi lien ket bi an</h4>
                     <div class="bg-body-tertiary p-4">
                         <p>The loai: Phiêu Lưu - Hành Động, Hình Sự - Chiến Tranh</p>
-                        <p>Nam phat hanh: <th:block th:text="movie.releaseYear"></th:block></p>
+                        <p>Nam phat hanh: <th:block th:text="${movie.releaseYear}"></th:block></p>
                         <p>Quoc gia: Hàn Quốc</p>
                         <p>Dao dien: Kim Moon Kyo</p>
                         <p>Dien vien: Ji Sung, Jeon Mi Do, Kwon Yool, Kim Kyung Nam, Jung Soon Won, Jung Yoo Min</p>
-                        <p>Mo ta: Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae molestias voluptatibus ea in officia. Reprehenderit quae, temporibus laborum incidunt fuga illum eveniet veritatis, dicta, nam ratione suscipit assumenda earum nostrum autem. Nobis hic odit reprehenderit eaque incidunt at voluptatem autem accusamus voluptates, quo illo natus ab perspiciatis sit ad quidem?</p>
+                        <p>Mo ta: <th:block th:text="${movie.description}"></th:block></p>
                         <button class="btn btn-danger px-5">Xem phim</button>
                         <button class="btn btn-dark px-5">Thêm vào yêu thích</button>
                     </div>
