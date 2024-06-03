@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,5 +23,11 @@ public class WebService {
     }
     public List<Movie>getHotMovie(){
         return movieRepository.findTop10ByStatusOrderByRatingDesc(true);
+    }
+    public Movie getMovieDetail(Integer id,String slug){
+        return movieRepository.findByStatusAndIdAndSlug(true,id,slug).orElse(null);
+    }
+    public List<Movie>getRelateMovies(Movie movie){
+        return movieRepository.findTop6ByTypeAndStatusAndIdNotOrderByRatingDesc(movie.getType(),true, movie.getId());
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -58,6 +59,10 @@ public class WebController {
     public String getMovieDetail(@PathVariable Integer id,
                                  @PathVariable String slug,
                                  Model model){
+        Movie movie=webService.getMovieDetail(id,slug);
+        List<Movie> relateMovies=webService.getRelateMovies(movie);
+        model.addAttribute("movie",movie);
+        model.addAttribute("relateMovies",relateMovies);
         return "web/chi-tiet-phim";
     }
     @GetMapping("/phim/dang-nhap")

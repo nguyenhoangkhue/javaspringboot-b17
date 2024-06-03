@@ -20,16 +20,16 @@
               <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                   <li class="nav-item">
-                    <a class="nav-link active text-white" aria-current="page" href="#">Trang chủ</a>
+                    <a class="nav-link active text-white" aria-current="page" href="/">Trang chủ</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link text-white" href="#">Phim lẻ</a>
+                    <a class="nav-link text-white" href="/phim-le">Phim lẻ</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link text-white" href="#">Phim bộ</a>
+                    <a class="nav-link text-white" href="/phim-bo">Phim bộ</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link text-white" href="#">Phim chiếu rạp</a>
+                    <a class="nav-link text-white" href="/phim-chieu-rap">Phim chiếu rạp</a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link text-white" href="#">Quốc gia</a>
@@ -49,16 +49,16 @@
     <section class="py-4">
         <div class="container">
             <div class="row">
-                <div class="col-3">
+                <div class="col-3" >
                     <div class="movie-poster rounded overflow-hidden" style="height: 410px;">
-                        <img src="https://image.motchilltv.day/avatar/xin-hay-yeu-duong-voi-ke-hai-huoc-x500.webp" alt="">
+                        <img th:src="movie.poster" th:alt="movie.name">
                     </div>
                 </div>
                 <div class="col-9">
-                    <h4 class="mb-2">moi lien ket bi an</h4>
+                    <h4 class="mb-2" th:text="movie.name">moi lien ket bi an</h4>
                     <div class="bg-body-tertiary p-4">
                         <p>The loai: Phiêu Lưu - Hành Động, Hình Sự - Chiến Tranh</p>
-                        <p>Nam phat hanh: 2024</p>
+                        <p>Nam phat hanh: <th:block th:text="movie.releaseYear"></th:block></p>
                         <p>Quoc gia: Hàn Quốc</p>
                         <p>Dao dien: Kim Moon Kyo</p>
                         <p>Dien vien: Ji Sung, Jeon Mi Do, Kwon Yool, Kim Kyung Nam, Jung Soon Won, Jung Yoo Min</p>
@@ -93,54 +93,18 @@
                 <a href="">xem thêm</a>
             </div>
             <div class="row">
-                <div class="col-2">
-                    <div class="movie-item">
-                        <div class="movie-poster rounded overflow-hidden">
-                            <img src="https://image.motchilltv.day/avatar/xin-hay-yeu-duong-voi-ke-hai-huoc-x500.webp" alt="">
+                <div class="col-2" th:each="movie : ${relateMovies}">
+                    <a th:href="@{/phim/{id}/{slug} (id=${movie.id}, slug=${movie.slug})}"
+                       class="text-decoration-none text-dark">
+                        <div class="movie-item">
+                            <div class="movie-poster rounded overflow-hidden">
+                                <img th:src="${movie.poster}" th:alt="${movie.name}">
+                            </div>
+                            <p class="mt-2" th:text="${movie.name}">Truy Tìm Dory</p>
                         </div>
-                        <p class="mt-2">moi lien ket bi an</p>
-                    </div>
+                    </a>
                 </div>
-                <div class="col-2">
-                    <div class="movie-item">
-                        <div class="movie-poster rounded overflow-hidden">
-                            <img src="https://image.motchilltv.day/avatar/xin-hay-yeu-duong-voi-ke-hai-huoc-x500.webp" alt="">
-                        </div>
-                        <p class="mt-2">moi lien ket bi an</p>
-                    </div>
-                </div>
-                <div class="col-2">
-                    <div class="movie-item">
-                        <div class="movie-poster rounded overflow-hidden">
-                            <img src="https://image.motchilltv.day/avatar/xin-hay-yeu-duong-voi-ke-hai-huoc-x500.webp" alt="">
-                        </div>
-                        <p class="mt-2">moi lien ket bi an</p>
-                    </div>
-                </div>
-                <div class="col-2">
-                    <div class="movie-item">
-                        <div class="movie-poster rounded overflow-hidden">
-                            <img src="https://image.motchilltv.day/avatar/xin-hay-yeu-duong-voi-ke-hai-huoc-x500.webp" alt="">
-                        </div>
-                        <p class="mt-2">moi lien ket bi an</p>
-                    </div>
-                </div>
-                <div class="col-2">
-                    <div class="movie-item">
-                        <div class="movie-poster rounded overflow-hidden">
-                            <img src="https://image.motchilltv.day/avatar/xin-hay-yeu-duong-voi-ke-hai-huoc-x500.webp" alt="">
-                        </div>
-                        <p class="mt-2">moi lien ket bi an</p>
-                    </div>
-                </div>
-                <div class="col-2">
-                    <div class="movie-item">
-                        <div class="movie-poster rounded overflow-hidden">
-                            <img src="https://image.motchilltv.day/avatar/xin-hay-yeu-duong-voi-ke-hai-huoc-x500.webp" alt="">
-                        </div>
-                        <p class="mt-2">moi lien ket bi an</p>
-                    </div>
-                </div>
+        </div>
         </div>
     </section>
     <section class="py-4">

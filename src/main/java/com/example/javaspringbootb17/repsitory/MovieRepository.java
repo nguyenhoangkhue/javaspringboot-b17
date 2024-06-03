@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface MovieRepository extends JpaRepository<Movie,Integer> {
@@ -34,4 +35,6 @@ public interface MovieRepository extends JpaRepository<Movie,Integer> {
     Page<Movie> findByTypeAndStatus(MovieType type, Boolean status, Pageable pageable);
     //select*from movies where status=? order by ratting desc
     List<Movie> findTop10ByStatusOrderByRatingDesc(Boolean status);
+    Optional<Movie> findByStatusAndIdAndSlug(Boolean status,Integer id,String slug);
+    List<Movie> findTop6ByTypeAndStatusAndIdNotOrderByRatingDesc(MovieType type,Boolean status,Integer id);
 }
