@@ -57,14 +57,27 @@
                 <div class="col-9">
                     <h4 class="mb-2" th:text="${movie.name}">moi lien ket bi an</h4>
                     <div class="bg-body-tertiary p-4">
-                        <p>The loai: Phiêu Lưu - Hành Động, Hình Sự - Chiến Tranh</p>
+                        <p>The loai:
+                            <th:block th:each="genre,iterStat:${movie.genres}">
+                                <span th:text="${genre.name}"></span>
+                                <span th:if="${!iterStat.last}">-</span>
+                            </th:block>
+                        </p>
                         <p>Nam phat hanh: <th:block th:text="${movie.releaseYear}"></th:block></p>
-                        <p>Quoc gia: Hàn Quốc</p>
-                        <p>Dao dien: Kim Moon Kyo</p>
-                        <p>Dien vien: Ji Sung, Jeon Mi Do, Kwon Yool, Kim Kyung Nam, Jung Soon Won, Jung Yoo Min</p>
+                        <p>Quoc gia: <th:block th:text="${movie.country.name}"></th:block></p>
+                        <p>Dao dien:
+                            <th:block th:each="director,iterStat:${movie.directors}">
+                                <span th:text="${director.name}"></span>
+                                <span th:if="${!iterStat.last}">-</span>
+                            </th:block></p>
+                        <p>Dien vien:
+                            <th:block th:each="actor,iterStat:${movie.actors}">
+                                <span th:text="${actor.name}"></span>
+                                <span th:if="${!iterStat.last}">-</span>
+                            </th:block></p>
                         <p>Mo ta: <th:block th:text="${movie.description}"></th:block></p>
-                        <button class="btn btn-danger px-5">Xem phim</button>
-                        <button class="btn btn-dark px-5">Thêm vào yêu thích</button>
+                        <a class="btn btn-danger px-5">Xem phim</a>
+                        <a class="btn btn-dark px-5">Thêm vào yêu thích</a>
                     </div>
                 </div>
             </div>
@@ -73,15 +86,13 @@
     <section class="py-2">
         <div class="container">
             <div class="row">
-                <h3 class="text-uppercase mb-3">Tập phim</h3>
-                <div>
-                    <button class="btn btn-dark">Tập 1</button>
-                    <button class="btn btn-dark">Tập 2</button>
-                    <button class="btn btn-dark">Tập 3</button>
-                    <button class="btn btn-dark">Tập 4</button>
-                    <button class="btn btn-dark">Tập 5</button>
-                    <button class="btn btn-dark">Tập 6</button>
-                    <button class="btn btn-dark">Tập 7</button>
+                <div th:if="${movie.type.toString()=='PHIM_BO'}">
+                    <h3 class="text-uppercase mb-3">Tập phim</h3>
+                    <div class="d-flex">
+                        <div th:each="episode,iterStat:${listEpisode}">
+                            <a th:href="@{/xem-phim/{id}/{slug}?tap={episode} (id=${movie.id}, slug=${movie.slug},episode=${episode})}" th:text="'Tập ' + ${iterStat.index + 1}" class="btn btn-dark mx-2"></a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -110,57 +121,15 @@
     <section class="py-4">
         <div class="container">
             <h3 class="text-uppercase mb-3">Bình luận</h3>
-            <div class="review-list">
+            <div class="review-list" th:each="review:${listReviews}">
                 <div class="review-item d-flex mb-3">
                     <div class="review-avatar">
-                        <img src="https://image.motchilltv.day/avatar/xin-hay-yeu-duong-voi-ke-hai-huoc-x500.webp" alt="">
+                        <img th:src="${review.user.avatar}" th:alt="${review.user.name}">
                     </div>
                     <div class="review-info ps-3">
-                        <p class="mb-0">
-                            <span class="fw-bold">Bui hien</span>
-                            <span class="fst-italic">(26/5/2024)</span>
-                        </p>
-                        <p class="mb-0">4 <span class="text-warning">⭐</span></p>
-                        <p class="mb-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem voluptas ducimus numquam totam id! Nemo earum possimus unde molestias qui.</p>
-                    </div>
-                </div>
-                <div class="review-item d-flex mb-3">
-                    <div class="review-avatar">
-                        <img src="https://image.motchilltv.day/avatar/xin-hay-yeu-duong-voi-ke-hai-huoc-x500.webp" alt="">
-                    </div>
-                    <div class="review-info ps-3">
-                        <p class="mb-0">
-                            <span class="fw-bold">Bui hien</span>
-                            <span class="fst-italic">(26/5/2024)</span>
-                        </p>
-                        <p class="mb-0">4 <span class="text-warning">⭐</span></p>
-                        <p class="mb-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem voluptas ducimus numquam totam id! Nemo earum possimus unde molestias qui.</p>
-                    </div>
-                </div>
-                <div class="review-item d-flex mb-3">
-                    <div class="review-avatar">
-                        <img src="https://image.motchilltv.day/avatar/xin-hay-yeu-duong-voi-ke-hai-huoc-x500.webp" alt="">
-                    </div>
-                    <div class="review-info ps-3">
-                        <p class="mb-0">
-                            <span class="fw-bold">Bui hien</span>
-                            <span class="fst-italic">(26/5/2024)</span>
-                        </p>
-                        <p class="mb-0">4 <span class="text-warning">⭐</span></p>
-                        <p class="mb-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem voluptas ducimus numquam totam id! Nemo earum possimus unde molestias qui.</p>
-                    </div>
-                </div>
-                <div class="review-item d-flex mb-3">
-                    <div class="review-avatar">
-                        <img src="https://image.motchilltv.day/avatar/xin-hay-yeu-duong-voi-ke-hai-huoc-x500.webp" alt="">
-                    </div>
-                    <div class="review-info ps-3">
-                        <p class="mb-0">
-                            <span class="fw-bold">Bui hien</span>
-                            <span class="fst-italic">(26/5/2024)</span>
-                        </p>
-                        <p class="mb-0">4 <span class="text-warning">⭐</span></p>
-                        <p class="mb-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem voluptas ducimus numquam totam id! Nemo earum possimus unde molestias qui.</p>
+                        <p class="mb-0"><th:block th:text="${review.user.name}"></th:block></p>
+                        <p class="mb-0"><th:block th:text="${review.rating}"></th:block> <span class="text-warning">⭐</span></p>
+                        <p class="mb-0"><th:block th:text="${review.content}"></th:block></p>
                     </div>
                 </div>
             </div>

@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "movies")
+@Table(name = "reviews")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
 public class Review {
@@ -20,11 +20,18 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
-    @Column(nullable = false)
-    String name;
-
+    @Column(columnDefinition = "TEXT")
     String content;
+
     Double rating;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    User user;
+
+    @ManyToOne
+    @JoinColumn(name = "movie_id")
+    Movie movie;
 }

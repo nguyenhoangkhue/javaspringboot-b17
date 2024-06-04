@@ -10,7 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @SpringBootTest
 class JavaspringbootB17ApplicationTests {
@@ -26,12 +28,52 @@ class JavaspringbootB17ApplicationTests {
 	private DirectorRepository directorRepository;
 	@Autowired
 	private ActorRepository actorRepository;
+	@Autowired
+	private EpisodeRepository episodeRepository;
+	@Autowired
+	private ReviewRepository reviewRepository;
+	@Autowired
+	private HistoryRepository historyRepository;
+	@Autowired
+	private FavoriteRepository favoriteRepository;
 	@Test
-	void savedMovie() {
+	void saved_Movie() {
 		Faker faker=new Faker();
 		Slugify slugify= Slugify.builder().build();
 		Boolean status=faker.bool().bool();
+		Random rd=new Random();
+
+		List<Country>countries=countryRepository.findAll();
+		List<Genre>genres=genreRepository.findAll();
+		List<Actor>actors=actorRepository.findAll();
+		List<Director>directors=directorRepository.findAll();
+
 		for (int i=0;i<100;i++){
+
+			Country rdCountry=countries.get(rd.nextInt(countries.size()));
+
+			List<Genre> rdGenres=new ArrayList<>();
+			for (int j=0;j<rd.nextInt(2)+1;j++){
+				Genre rdGenre=genres.get(rd.nextInt(genres.size()));
+				if (!rdGenres.contains((rdGenre))){
+					rdGenres.add(rdGenre);
+				}
+			}
+			List<Actor> rdActors=new ArrayList<>();
+			for (int j=0;j<rd.nextInt(3)+5;j++){
+				Actor rdActor=actors.get(rd.nextInt(actors.size()));
+				if (!rdActors.contains((rdActor))){
+					rdActors.add(rdActor);
+				}
+			}
+			List<Director> rdDirectors=new ArrayList<>();
+			for (int j=0;j<rd.nextInt(2)+1;j++){
+				Director rdDirector=directors.get(rd.nextInt(directors.size()));
+				if (!rdDirectors.contains((rdDirector))){
+					rdDirectors.add(rdDirector);
+				}
+			}
+
 			String name=faker.book().title();
 			Movie movie= Movie.builder()
 					.name(name)
@@ -46,6 +88,10 @@ class JavaspringbootB17ApplicationTests {
 					.createdAt(LocalDateTime.now())
 					.updatedAt(LocalDateTime.now())
 					.publishedAt(status?LocalDateTime.now():null)
+					.country(rdCountry)
+					.genres(rdGenres)
+					.actors(rdActors)
+					.directors(rdDirectors)
 					.build();
 			movieRepository.save(movie);
 		}
@@ -138,20 +184,122 @@ class JavaspringbootB17ApplicationTests {
 			actorRepository.save(actor);
 		}
 	}
+
+	@Test
+	void save_episode(){
+		Random rd=new Random();
+		List<Movie>movies=movieRepository.findAll();
+
+		for (Movie movie:movies){
+			if (movie.getType().equals(MovieType.PHIM_BO)){
+				for (int i=0;i<rd.nextInt(6)+5;i++){
+					Episode episode=Episode.builder()
+							.name("Tập"+(i+1))
+							.duration(50)
+							.videoUrl("https://videos.pexels.com/video-files/3209828/3209828-hd_1280_720_25fps.mp4")
+							.displayOrder(i+1)
+							.status(true)
+							.createdAt(LocalDateTime.now())
+							.updatedAt(LocalDateTime.now())
+							.publishedAt(true ? LocalDateTime.now():null)
+							.movie(movie)
+							.build();
+					episodeRepository.save(episode);
+				}
+			}else {
+				Episode episode=Episode.builder()
+						.name("Xem full")
+						.duration(150)
+						.videoUrl("https://videos.pexels.com/video-files/3209828/3209828-hd_1280_720_25fps.mp4")
+						.displayOrder(1)
+						.status(true)
+						.createdAt(LocalDateTime.now())
+						.updatedAt(LocalDateTime.now())
+						.publishedAt(LocalDateTime.now())
+						.movie(movie)
+						.build();
+				episodeRepository.save(episode);
+			}
+		}
+	}
+	@Test
+	void save_reviews(){
+		Random rd=new Random();
+		Faker faker=new Faker();
+		List<Movie>movies=movieRepository.findAll();
+		List<User>users=userRepository.findAll();
+
+		for (Movie movie:movies){
+			for (int i=0;i< rd.nextInt(6)+5;i++){
+				User rdUser=users.get(rd.nextInt(users.size()));
+				Review review=Review.builder()
+						.content(faker.lorem().paragraph())
+						.rating(Double.valueOf(rd.nextInt(6)))
+						.createdAt(LocalDateTime.now())
+						.updatedAt(LocalDateTime.now())
+						.movie(movie)
+						.user(rdUser)
+						.build();
+				reviewRepository.save(review);
+			}
+		}
+	}
+	@Test
+	void save_histories(){
+		Random rd=new Random();
+		List<Movie>movies=movieRepository.findAll();
+		List<User>users=userRepository.findAll();
+		List<Episode>episodes=episodeRepository.findAll();
+
+		for (User user:users){
+			for (int i=0;i< rd.nextInt(6)+5;i++){
+				Movie rdMovie=movies.get(rd.nextInt(movies.size()));
+				Episode rdEpisode=episodes.get(rd.nextInt(episodes.size()));
+				History history=History.builder()
+						.duration(Double.valueOf(rd.nextInt(150,300)))
+						.createdAt(LocalDateTime.now())
+						.updatedAt(LocalDateTime.now())
+						.user(user)
+						.movie(rdMovie)
+						.episode(rdEpisode)
+						.build();
+				historyRepository.save(history);
+			}
+		}
+	}
+	@Test
+	void save_favorite(){
+		Random rd=new Random();
+		List<Movie>movies=movieRepository.findAll();
+		List<User>users=userRepository.findAll();
+
+		for (User user:users){
+			for (int i=0;i< rd.nextInt(6)+5;i++){
+				Movie rdMovie=movies.get(rd.nextInt(movies.size()));
+				Favorite favorite=Favorite.builder()
+						.createdAt(LocalDateTime.now())
+						.updatedAt(LocalDateTime.now())
+						.user(user)
+						.movie(rdMovie)
+						.build();
+				favoriteRepository.save(favorite);
+			}
+		}
+	}
 	@Test
 	void movie_method_test(){
-		List<Movie>movies=movieRepository.findAll();//select*from movie
-		System.out.println("movie size:"+movies.size());
-
-		List<Movie>moviesByIds=movieRepository.findAllById(List.of(1,2,3));
-		System.out.println("movie size:"+moviesByIds.size());
-
-		Movie movie=movieRepository.findById(1).orElse(null);
-		movie.setName("hiihihii");
-		movieRepository.save(movie);
+//		List<Movie>movies=movieRepository.findAll();//select*from movie
+//		System.out.println("movie size:"+movies.size());
+//
+//		List<Movie>moviesByIds=movieRepository.findAllById(List.of(1,2,3));
+//		System.out.println("movie size:"+moviesByIds.size());
+//
+//		Movie movie=movieRepository.findById(1).orElse(null);
+//		movie.setName("hiihihii");
+//		movieRepository.save(movie);
 
 //		movieRepository.deleteById(2);
-//		movieRepository.delete(movie);
+//		actorRepository.deleteAll();
 //		movieRepository.deleteAll(moviesByIds);
 //		movieRepository.deleteAll();
 	}

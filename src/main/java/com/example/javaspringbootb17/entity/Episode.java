@@ -29,4 +29,8 @@ public class Episode {
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
     LocalDateTime publishedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "movie_id")
+    Movie movie;
 }

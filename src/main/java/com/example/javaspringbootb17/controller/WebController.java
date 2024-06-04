@@ -1,6 +1,8 @@
 package com.example.javaspringbootb17.controller;
 
+import com.example.javaspringbootb17.entity.Episode;
 import com.example.javaspringbootb17.entity.Movie;
+import com.example.javaspringbootb17.entity.Review;
 import com.example.javaspringbootb17.model.enums.MovieType;
 import com.example.javaspringbootb17.service.WebService;
 import lombok.RequiredArgsConstructor;
@@ -60,9 +62,13 @@ public class WebController {
                                  @PathVariable String slug,
                                  Model model){
         Movie movie=webService.getMovieDetail(id,slug);
-        List<Movie> relateMovies=webService.getRelateMovies(movie);
+        List<Movie>relateMovies=webService.getRelateMovies(movie);
+        List<Episode>listEpisode=webService.getEpisodes(movie);
+        List<Review>listReviews=webService.getReviews(movie);
         model.addAttribute("movie",movie);
         model.addAttribute("relateMovies",relateMovies);
+        model.addAttribute("listEpisode",listEpisode);
+        model.addAttribute("listReviews",listReviews);
         return "web/chi-tiet-phim";
     }
     @GetMapping("/phim/dang-nhap")

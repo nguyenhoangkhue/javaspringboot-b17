@@ -1,6 +1,7 @@
 package com.example.javaspringbootb17.repsitory;
 
 import com.example.javaspringbootb17.entity.Movie;
+import com.example.javaspringbootb17.entity.Review;
 import com.example.javaspringbootb17.model.enums.MovieType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
