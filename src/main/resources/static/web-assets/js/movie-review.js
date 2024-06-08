@@ -37,12 +37,12 @@ function highlightStars(rating) {
     });
 }
 document.addEventListener("DOMContentLoaded", function() {
-    let selectedRating = 0;
+    let rating = 0;
 
     document.querySelectorAll(".star").forEach(function(star) {
         star.addEventListener("click", function() {
-            selectedRating = this.getAttribute("data-rating");
-            document.getElementById("rating-value").textContent = `Rating: ${selectedRating}`;
+            rating = this.getAttribute("data-rating");
+            document.getElementById("rating-value").textContent = `Rating: ${rating}`;
         });
     });
 
@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         const reviewData = {
             content: content,
-            rating: selectedRating,
+            rating: rating,
             movieId: movieId
         };
 
