@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const content = document.getElementById("review-content").value;
         const modalReview = document.getElementById("modalReview");
         const movieId = modalReview.getAttribute('data-movie-id');
-        if (!content || selectedRating === 0) {
+        if (!content || rating === 0) {
             alert("Please enter content and select a rating.");
             return;
         }
