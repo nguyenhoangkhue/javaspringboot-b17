@@ -2,6 +2,8 @@ const stars = document.querySelectorAll(".rating .star");
 const ratingValue = document.getElementById("rating-value");
 
 let currentRating = 0;
+const reviewsLimit=5;
+let currentPage=1;
 
 stars.forEach((star) => {
     star.addEventListener("mouseover", () => {
@@ -78,8 +80,11 @@ function formatDate(dateString) {
 }
 
 const renderReviews = (reviews) => {
+    const start = (currentPage - 1) * reviewsLimit;
+    const end = start + reviewsLimit;
+    const paginatedReviews = reviews.slice(start, end);
     let html = "";
-    reviews.forEach((review) => {
+    paginatedReviews.forEach((review) => {
         html += `
             <div class="review-item d-flex mb-4">
                 <div class="review-avatar">
@@ -211,8 +216,6 @@ const openModalReviewUpdate = (id) => {
     contentEl.value = review.content;
 }
 
-const reviewsLimit=5;
-let currentPage=1;
 function renderPagination(totalReviews) {
     const totalPage = Math.ceil(totalReviews / reviewsLimit);
     const pagination = document.querySelector(".pagination");
