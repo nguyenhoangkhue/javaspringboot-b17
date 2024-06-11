@@ -71,12 +71,29 @@ public class WebController {
         model.addAttribute("listReviews",listReviews);
         return "web/chi-tiet-phim";
     }
-    @GetMapping("/phim/dang-nhap")
+    @GetMapping("/dang-nhap")
     public String getSignIn(Model model){
         return "web/signin";
     }
-    @GetMapping("/phim/dang-ky")
+    @GetMapping("/dang-ky")
     public String getSignUp(Model model){
         return "web/signup";
+    }
+    @GetMapping("/xem-phim/{id}/{slug}")
+    public String getMovieStreamingDetailPage(@PathVariable Integer id,
+                                 @PathVariable String slug,
+                                 @RequestParam String tap,
+                                 Model model){
+        Movie movie=webService.getMovieDetail(id,slug);
+        List<Movie>relateMovies=webService.getRelateMovies(movie);
+        List<Episode>listEpisode=webService.getEpisodes(movie);
+        List<Review>listReviews=webService.getReviews(movie);
+        Episode currentEpisode=webService.currentEpisode(movie, tap);
+        model.addAttribute("movie",movie);
+        model.addAttribute("relateMovies",relateMovies);
+        model.addAttribute("listEpisode",listEpisode);
+        model.addAttribute("listReviews",listReviews);
+        model.addAttribute("currentEpisode",currentEpisode);
+        return "web/xem-phim";
     }
 }

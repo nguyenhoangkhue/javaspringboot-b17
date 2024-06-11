@@ -9,6 +9,8 @@ import com.github.slugify.Slugify;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +38,8 @@ class JavaspringbootB17ApplicationTests {
 	private HistoryRepository historyRepository;
 	@Autowired
 	private FavoriteRepository favoriteRepository;
+	@Autowired
+	BCryptPasswordEncoder passwordEncoder;
 	@Test
 	void saved_Movie() {
 		Faker faker=new Faker();
@@ -284,6 +288,14 @@ class JavaspringbootB17ApplicationTests {
 						.build();
 				favoriteRepository.save(favorite);
 			}
+		}
+	}
+	@Test
+	void encode_password_user(){
+		List<User>users=userRepository.findAll();
+		for (User user:users){
+			user.setPassword((passwordEncoder).encode("123"));
+			userRepository.save(user);
 		}
 	}
 	@Test

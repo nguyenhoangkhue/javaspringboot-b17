@@ -37,9 +37,18 @@ public class WebService {
         return movieRepository.findTop6ByTypeAndStatusAndIdNotOrderByRatingDesc(movie.getType(),true, movie.getId());
     }
     public List<Episode>getEpisodes(Movie movie){
-        return episodeRepository.findByMovie_IdAndStatusOrderByDisplayOrderDesc(movie.getId(),true);
+        return episodeRepository.findByMovie_IdAndStatusOrderByDisplayOrderAsc(movie.getId(),true);
     }
     public List<Review>getReviews(Movie movie){
         return reviewRepository.findAllByMovie_Id(movie.getId());
+    }
+    public Episode currentEpisode(Movie movie, String tap){
+        if(tap.equals("full")){
+            return episodeRepository.findByMovie_IdAndStatusAndDisplayOrder(movie.getId(),true, 1)
+                    .orElse(null);
+        }else {
+            return episodeRepository.findByMovie_IdAndStatusAndDisplayOrder(movie.getId(),true, Integer.valueOf(tap))
+                    .orElse(null);
+        }
     }
 }

@@ -57,6 +57,21 @@
     </header>
     <section class="py-4">
         <div class="container">
+            <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a class="text-primary" href="/">Trang chủ</a></li>
+                    <li class="breadcrumb-item">
+                        <a th:switch="${movie.type.toString()}">
+                            <a class="text-primary" th:case="PHIM_LE" href="/phim-le">Phim lẻ</a>
+                            <a class="text-primary" th:case="PHIM_BO" href="/phim-bo">Phim bộ</a>
+                            <a class="text-primary" th:case="PHIM_CHIEU_RAP" href="/phim-chieu-rap">Phim chiếu rạp</a>
+                            <a class="text-primary" th:case="*" href="#">Không xác định</a> <!-- Trường hợp mặc định -->
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page" th:text="${movie.name}">Đầu Gấu Đụng Đầu Đất
+                    </li>
+                </ol>
+            </nav>
             <div class="row">
                 <div class="col-3" >
                     <div class="movie-poster rounded overflow-hidden" style="height: 410px;">
@@ -85,23 +100,30 @@
                                 <span th:if="${!iterStat.last}">-</span>
                             </th:block></p>
                         <p>Mo ta: <th:block th:text="${movie.description}"></th:block></p>
-                        <a class="btn btn-danger px-5" th:href="@{/xem-phim/{id}/{slug}?tap=1 (id=${movie.id}, slug=${movie.slug})}">Xem phim</a>
-                        <a class="btn btn-dark px-5">Thêm vào yêu thích</a>
+                        <th:block th:if="${movie.type.toString() == 'PHIM_BO' && listEpisode.size() > 0}">
+                            <a class="btn btn-danger px-5"
+                               th:href="@{/xem-phim/{id}/{slug} (id=${movie.id}, slug=${movie.slug}, tap=${listEpisode.get(0).displayOrder})}">
+                                Xem phim</a>
+                        </th:block>
+
+                        <th:block
+                                th:if="${(movie.type.toString() == 'PHIM_LE' || movie.type.toString() == 'PHIM_CHIEU_RAP') && listEpisode.size() > 0}">
+                            <a class="btn btn-danger px-5"
+                               th:href="@{/xem-phim/{id}/{slug} (id=${movie.id}, slug=${movie.slug}, tap='full')}">
+                                Xem phim</a>
+                        </th:block>
+                        <button class="btn btn-dark px-5">Thêm vào yêu thích</button>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-    <section class="py-2">
-        <div class="container">
-            <div class="row">
-                <div th:if="${movie.type.toString()=='PHIM_BO'}">
-                    <h3 class="text-uppercase mb-3">Tập phim</h3>
-                    <div class="d-flex">
-                        <div th:each="episode,iterStat:${listEpisode}">
-                            <a th:href="@{/xem-phim/{id}/{slug}?tap={episode} (id=${movie.id}, slug=${movie.slug},episode=${episode})}" th:text="'Tập ' + ${iterStat.index + 1}" class="btn btn-dark mx-2"></a>
-                        </div>
-                    </div>
+            <div class="row" th:if="${movie.type.toString() == 'PHIM_BO' && listEpisode.size() > 0}">
+                <h4 class="text-uppercase mt-4 mb-3">Danh sách tập phim</h4>
+                <div>
+                    <a class="btn btn-dark me-2"
+                       th:each="episode : ${listEpisode}"
+                       th:text="${episode.name}"
+                       th:href="@{/xem-phim/{id}/{slug} (id=${movie.id}, slug=${movie.slug}, tap=${episode.displayOrder})}">
+                        >Tập 1</a>
                 </div>
             </div>
         </div>
@@ -172,7 +194,7 @@
                 </div>
             </div>
             <nav aria-label="Page navigation">
-                <ul class="pagination justify-content-center">
+                <ul class="pagination justify-content-center d-flex justify-content-center">
                 </ul>
             </nav>
         </div>
