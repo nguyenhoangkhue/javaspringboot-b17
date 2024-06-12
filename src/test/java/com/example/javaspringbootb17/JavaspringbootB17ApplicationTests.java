@@ -111,7 +111,7 @@ class JavaspringbootB17ApplicationTests {
 					.name(name)                                                        
 					.email(faker.internet().emailAddress())
 					.avatar("https://placehold.co/600x400?text=" + name)
-					.password(password)
+					.password("123")
 					.role(Role.values()[faker.number().numberBetween(0, Role.values().length - 1)])
 					.createdAt(LocalDateTime.now())
 					.updatedAt(LocalDateTime.now())
