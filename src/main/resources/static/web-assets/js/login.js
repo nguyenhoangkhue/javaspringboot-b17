@@ -1,23 +1,23 @@
-document.getElementById('loginForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    const loginData={
-        email: email,
-        password: password
+const formLoginEl = document.getElementById('loginForm');
+const emailEl = document.getElementById('email');
+const passwordEl = document.getElementById('password');
+formLoginEl.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const email = emailEl.value;
+    const password = passwordEl.value;
+    const data = {
+        email,
+        password
+    };
+    try {
+        const response = await axios.post('/api/login', data);
+        if (response.status === 200) {
+            toastr.success('Đăng nhập thành công');
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 1000);
+        }
+    } catch (error) {
+        toastr.error('Đăng nhập thất bại');
     }
-
-    axios.post('/api/login', loginData)
-        .then(function (response) {
-            if (response.data.success) {
-                toastr.success('Thành công', 'Đăng nhập thành công!');
-            } else {
-                toastr.error('Lỗi', 'Sai email hoặc mật khẩu!');
-            }
-        })
-        .catch(error => {
-            console.error(error);
-            toastr.error('Lỗi', 'Đã xảy ra lỗi khi đăng nhập!');
-        });
 });

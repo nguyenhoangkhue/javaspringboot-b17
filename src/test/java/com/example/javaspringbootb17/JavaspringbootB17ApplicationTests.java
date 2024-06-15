@@ -87,7 +87,7 @@ class JavaspringbootB17ApplicationTests {
 					.releaseYear(faker.number().numberBetween(2000,2024))
 					.rating(faker.number().randomDouble(1,1,5))
 					.trailerURL("src=\"https://www.youtube.com/embed/hY1nE5vAriQ?si=vKKw9LOj0MFiBsQT\"")
-					.type(MovieType.values()[faker.number().numberBetween(0,MovieType.values().length-1)])
+					.type(MovieType.values()[faker.number().numberBetween(0,MovieType.values().length)])
 					.status(status)
 					.createdAt(LocalDateTime.now())
 					.updatedAt(LocalDateTime.now())

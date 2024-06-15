@@ -1,10 +1,11 @@
 package com.example.javaspringbootb17.controller;
 
-import com.example.javaspringbootb17.entity.Episode;
-import com.example.javaspringbootb17.entity.Movie;
-import com.example.javaspringbootb17.entity.Review;
+import com.example.javaspringbootb17.entity.*;
 import com.example.javaspringbootb17.model.enums.MovieType;
+import com.example.javaspringbootb17.service.FavoriteService;
+import com.example.javaspringbootb17.service.ReviewService;
 import com.example.javaspringbootb17.service.WebService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +20,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class WebController {
     private final WebService webService;
+    private final FavoriteService favoriteService;
+    private final HttpSession session;
     @GetMapping("")
     public String getHomePage(Model model){
         List<Movie> listHot=webService.getHotMovie();
@@ -61,10 +64,15 @@ public class WebController {
     public String getMovieDetail(@PathVariable Integer id,
                                  @PathVariable String slug,
                                  Model model){
+        User user=(User) session.getAttribute("currentUser");
         Movie movie=webService.getMovieDetail(id,slug);
         List<Movie>relateMovies=webService.getRelateMovies(movie);
         List<Episode>listEpisode=webService.getEpisodes(movie);
         List<Review>listReviews=webService.getReviews(movie);
+        if (user!=null){
+            boolean isFavorite = favoriteService.isFavorite(id);
+            model.addAttribute("isFavorite",isFavorite);
+        }
         model.addAttribute("movie",movie);
         model.addAttribute("relateMovies",relateMovies);
         model.addAttribute("listEpisode",listEpisode);
@@ -95,5 +103,11 @@ public class WebController {
         model.addAttribute("listReviews",listReviews);
         model.addAttribute("currentEpisode",currentEpisode);
         return "web/xem-phim";
+    }
+    @GetMapping("/phim-yeu-thich")
+    public String getFavoritePage(Model model) {
+        List<Favorite> favorites = favoriteService.getAllFavoritesByCurrentUser();
+        model.addAttribute("favorites", favorites);
+        return "web/phim-yeu-thich";
     }
 }

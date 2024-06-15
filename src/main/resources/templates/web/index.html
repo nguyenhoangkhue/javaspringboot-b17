@@ -20,30 +20,43 @@
                     <img src="https://motchilltv.io/logo_motchill.png" alt="">
                 </a>
                 <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link active text-white" aria-current="page" href="/">Trang chủ</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="/phim-le">Phim lẻ</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="/phim-bo">Phim bộ</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="/phim-chieu-rap">Phim chiếu rạp</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="#">Quốc gia</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="#">Thể loại</a>
-                        </li>
-                    </ul>
+                    <div class="navbar-nav">
+                        <a class="nav-link text-white" href="/">Trang chủ</a>
+                        <a class="nav-link text-white" href="/phim-le">Phim lẻ</a>
+                        <a class="nav-link text-white" href="/phim-bo">Phim bộ</a>
+                        <a class="nav-link text-white" href="/phim-chieu-rap">Phim chiếu rạp</a>
+                        <a class="nav-link text-white" href="#">Quốc gia</a>
+                        <a class="nav-link text-white" href="#">Thể loại</a>
+                    </div>
                     <form class="d-flex" role="search">
                         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                         <button class="btn btn-outline-success" type="submit">Search</button>
                     </form>
+                    <div>
+                        <a class="text-white" th:if="${session.currentUser==null}" href="/dang-nhap">Đăng nhập</a>
+                        <div class="dropdown" th:if="${session.currentUser!=null}">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false" th:text="${session.currentUser.name}">
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li th:if="${session.currentUser.role.toString() == 'ADMIN'}">
+                                    <a class="dropdown-item" href="/admin">Trang quản trị</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="/thong-tin-ca-nhan">Thông tin cá nhân</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="/phim-yeu-thich">Phim yêu thích</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="/lich-su-xem-phim">Lịch sử xem phim</a>
+                                </li>
+                                <li>
+                                    <span class="dropdown-item" style="cursor: pointer">Đăng xuất</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </nav>
@@ -172,6 +185,9 @@
             </div>
         </div>
     </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+            crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script>
