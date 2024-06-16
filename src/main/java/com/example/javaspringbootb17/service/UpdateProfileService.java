@@ -5,7 +5,6 @@ import com.example.javaspringbootb17.model.request.UpdateProfileRequest;
 import com.example.javaspringbootb17.repsitory.UserRepository;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
