@@ -143,16 +143,12 @@ const createReview = () => {
 
     axios.post("/api/reviews", reviewData)
         .then(response => {
+            console.log(response.data);
             toastr.success("Tạo mới đánh giá thành công!");
-
-            reviews.unshift(response.data);
-            renderReviews(reviews);
-
-            modalReviewInstance.hide();
         })
         .catch(error => {
-            console.error(error);
-            toastr.error("There was an error creating the review.");
+            console.error('Có lỗi xảy ra:', error);
+            toastr.error("Đã có lỗi xảy ra trong quá trình cập nhật thông tin!");
         });
 }
 
