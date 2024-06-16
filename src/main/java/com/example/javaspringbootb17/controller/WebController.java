@@ -126,4 +126,13 @@ public class WebController {
         model.addAttribute("user", user);
         return "web/thong-tin-ca-nhan";
     }
+    @PutMapping("/api/users/update-profile")
+    @ResponseBody
+    public ResponseEntity<String> updateProfile() {
+        return ResponseEntity.ok("Thông tin đã được cập nhật!");
+    }
+    @PutMapping("/api/users/update-password")
+    public String updatePassword() {
+        return "Cập nhật mật khẩu thành công";
+    }
 }
