@@ -132,7 +132,8 @@ public class WebController {
         return ResponseEntity.ok("Thông tin đã được cập nhật!");
     }
     @PutMapping("/api/users/update-password")
-    public String updatePassword() {
-        return "Cập nhật mật khẩu thành công";
+    @ResponseBody
+    public ResponseEntity<String> updatePassword() {
+        return ResponseEntity.ok("Mật khẩu đã được cập nhật");
     }
 }
