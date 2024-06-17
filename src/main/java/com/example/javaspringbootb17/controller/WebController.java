@@ -111,22 +111,9 @@ public class WebController {
         return "web/phim-yeu-thich";
     }
     @GetMapping("/thong-tin-ca-nhan")
-    public String getUserInfo(Model model) {
-        User user=(User) session.getAttribute("currentUser");
-        if (user == null) {
-            return "redirect:/dang-nhap";
-        }
+    public String getProfilePage(Model model) {
+        User user = (User) session.getAttribute("currentUser");
         model.addAttribute("user", user);
         return "web/thong-tin-ca-nhan";
-    }
-    @PutMapping("/api/users/update-profile")
-    @ResponseBody
-    public ResponseEntity<String> updateProfile() {
-        return ResponseEntity.ok("Thông tin đã được cập nhật!");
-    }
-    @PutMapping("/api/users/update-password")
-    @ResponseBody
-    public ResponseEntity<String> updatePassword() {
-        return ResponseEntity.ok("Mật khẩu đã được cập nhật");
     }
 }
