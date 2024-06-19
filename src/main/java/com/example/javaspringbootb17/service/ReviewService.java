@@ -3,6 +3,8 @@ package com.example.javaspringbootb17.service;
 import com.example.javaspringbootb17.entity.Movie;
 import com.example.javaspringbootb17.entity.Review;
 import com.example.javaspringbootb17.entity.User;
+import com.example.javaspringbootb17.exception.BadRequestException;
+import com.example.javaspringbootb17.exception.ResourceNotFoundException;
 import com.example.javaspringbootb17.model.request.CreateReviewRequest;
 import com.example.javaspringbootb17.model.request.UpdateReviewRequest;
 import com.example.javaspringbootb17.repsitory.MovieRepository;
@@ -25,12 +27,12 @@ public class ReviewService {
     }
     //TODO:Validation huong dan sau(StringBoot Validation)
     public Review createReview(CreateReviewRequest request) {
-        //TODO:Fix user. Ve sau uset chinh la user dang dang nhap
+        //TODO:Fix user. Ve sau user chinh la user dang dang nhap
         Integer userId=1;
         User user=userRepository.findById(userId)
-                .orElseThrow(()->new RuntimeException("User not found"));
+                .orElseThrow(()->new ResourceNotFoundException("User not found"));
         Movie movie=movieRepository.findById(request.getMovieId())
-                .orElseThrow(()->new RuntimeException("Movie not found"));
+                .orElseThrow(()->new ResourceNotFoundException("Movie not found"));
         Review review=Review.builder()
                 .content(request.getContent())
                 .rating(Double.valueOf(request.getRating()))
@@ -45,10 +47,10 @@ public class ReviewService {
 
     public Review updateReview(Integer id, UpdateReviewRequest request) {
         Review review=reviewRepository.findById(id)
-                .orElseThrow(()->new RuntimeException("Review not found"));
+                .orElseThrow(()->new ResourceNotFoundException("Review not found"));
         Integer userId=1;
         User user=userRepository.findById(userId)
-                .orElseThrow(()->new RuntimeException("User not found"));
+                .orElseThrow(()->new ResourceNotFoundException("User not found"));
         if (!review.getUser().getId().equals(user.getId())){
             throw new RuntimeException("You can't update this review");
         }
@@ -61,12 +63,12 @@ public class ReviewService {
 
     public void deleteReview(Integer id) {
         Review review=reviewRepository.findById(id)
-                .orElseThrow(()->new RuntimeException("Review not found"));
+                .orElseThrow(()->new ResourceNotFoundException("Review not found"));
         Integer userId=1;
         User user=userRepository.findById(userId)
-                .orElseThrow(()->new RuntimeException("User not found"));
+                .orElseThrow(()->new ResourceNotFoundException("User not found"));
         if (!review.getUser().getId().equals(user.getId())){
-            throw new RuntimeException("You can't update this review");
+            throw new BadRequestException("You can't update this review");
         }
         reviewRepository.deleteById(id);
     }

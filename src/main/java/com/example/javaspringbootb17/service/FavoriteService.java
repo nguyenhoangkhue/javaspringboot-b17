@@ -3,6 +3,8 @@ package com.example.javaspringbootb17.service;
 import com.example.javaspringbootb17.entity.Favorite;
 import com.example.javaspringbootb17.entity.Movie;
 import com.example.javaspringbootb17.entity.User;
+import com.example.javaspringbootb17.exception.BadRequestException;
+import com.example.javaspringbootb17.exception.ResourceNotFoundException;
 import com.example.javaspringbootb17.repsitory.FavoriteRepository;
 import com.example.javaspringbootb17.repsitory.MovieRepository;
 import jakarta.servlet.http.HttpSession;
@@ -23,9 +25,9 @@ public class FavoriteService {
     public Favorite addToFavorite(Integer movieId) {
         User user = (User) session.getAttribute("currentUser");
         Movie movie = movieRepository.findById(movieId)
-                .orElseThrow(() -> new RuntimeException("Movie not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Movie not found"));
         if (favoriteRepository.existsByUser_IdAndMovie_Id(user.getId(), movie.getId())) {
-            throw new RuntimeException("Movie already in favorite list");
+            throw new BadRequestException("Movie already in favorite list");
         }
         Favorite favorite = Favorite.builder()
                 .user(user)
@@ -38,11 +40,11 @@ public class FavoriteService {
     public void deleteFromFavorite(Integer movieId) {
         User user = (User) session.getAttribute("currentUser");
         Movie movie = movieRepository.findById(movieId)
-                .orElseThrow(() -> new RuntimeException("Movie not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Movie not found"));
 
         Optional<Favorite> favoriteOptional = favoriteRepository.findByUser_IdAndMovie_Id(user.getId(), movie.getId());
         if (favoriteOptional.isEmpty()) {
-            throw new RuntimeException("Movie not in favorite list");
+            throw new ResourceNotFoundException("Movie not in favorite list");
         }
 
         favoriteRepository.delete(favoriteOptional.get());
@@ -52,7 +54,7 @@ public class FavoriteService {
         User user = (User) session.getAttribute("currentUser");
 
         Movie movie = movieRepository.findById(movieId)
-                .orElseThrow(() -> new RuntimeException("Movie not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Movie not found"));
 
         return favoriteRepository.existsByUser_IdAndMovie_Id(user.getId(), movie.getId());
     }

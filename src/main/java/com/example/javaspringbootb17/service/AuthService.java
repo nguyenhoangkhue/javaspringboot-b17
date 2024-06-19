@@ -1,6 +1,8 @@
 package com.example.javaspringbootb17.service;
 
 import com.example.javaspringbootb17.entity.User;
+import com.example.javaspringbootb17.exception.BadRequestException;
+import com.example.javaspringbootb17.exception.ResourceNotFoundException;
 import com.example.javaspringbootb17.model.request.LoginRequest;
 import com.example.javaspringbootb17.repsitory.UserRepository;
 import jakarta.servlet.http.HttpSession;
@@ -17,9 +19,9 @@ public class AuthService {
 
     public void login (LoginRequest request){
         User user = userRepository.findByEmail((request.getEmail()))
-                .orElseThrow(()->new RuntimeException("User not found"));
+                .orElseThrow(()->new ResourceNotFoundException("User not found"));
         if (!passwordEncoder.matches(request.getPassword(),user.getPassword())){
-            throw new RuntimeException("Passwrod is incorrect");
+            throw new BadRequestException("Passwrod is incorrect");
         }
         session.setAttribute("currentUser",user);
     }

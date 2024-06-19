@@ -2,6 +2,7 @@ package com.example.javaspringbootb17.service;
 
 
 import com.example.javaspringbootb17.entity.User;
+import com.example.javaspringbootb17.exception.BadRequestException;
 import com.example.javaspringbootb17.model.request.UpdatePasswordRequest;
 import com.example.javaspringbootb17.model.request.UpdateProfileRequest;
 import com.example.javaspringbootb17.repsitory.UserRepository;
@@ -29,11 +30,11 @@ public class UserService {
         User user = (User) session.getAttribute("currentUser");
 
         if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
-            throw new RuntimeException("Mật khẩu cũ không đúng");
+            throw new BadRequestException("Mật khẩu cũ không đúng");
         }
 
         if (!request.getNewPassword().equals(request.getConfirmPassword())) {
-            throw new RuntimeException("Mật khẩu xác nhận không khớp");
+            throw new BadRequestException("Mật khẩu xác nhận không khớp");
         }
 
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));

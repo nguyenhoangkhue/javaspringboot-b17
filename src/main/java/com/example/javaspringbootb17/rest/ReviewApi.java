@@ -4,6 +4,7 @@ import com.example.javaspringbootb17.entity.Review;
 import com.example.javaspringbootb17.model.request.CreateReviewRequest;
 import com.example.javaspringbootb17.model.request.UpdateReviewRequest;
 import com.example.javaspringbootb17.service.ReviewService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +16,7 @@ public class ReviewApi {
     private final ReviewService reviewService;
     //tao review-post
     @PostMapping
-    public ResponseEntity<?> crateReview(@RequestBody CreateReviewRequest request){
+    public ResponseEntity<?> crateReview(@Valid @RequestBody CreateReviewRequest request){
         Review review=reviewService.createReview(request);
         return ResponseEntity.ok(review);
     }
