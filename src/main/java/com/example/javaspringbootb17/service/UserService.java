@@ -3,6 +3,7 @@ package com.example.javaspringbootb17.service;
 
 import com.example.javaspringbootb17.entity.User;
 import com.example.javaspringbootb17.exception.BadRequestException;
+import com.example.javaspringbootb17.model.request.CreateUserRequest;
 import com.example.javaspringbootb17.model.request.UpdatePasswordRequest;
 import com.example.javaspringbootb17.model.request.UpdateProfileRequest;
 import com.example.javaspringbootb17.repsitory.UserRepository;
@@ -10,6 +11,9 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -40,5 +44,21 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         session.setAttribute("currentUser", user);
         userRepository.save(user);
+    }
+    public User createUser(CreateUserRequest request){
+        Optional<User>userOptional=userRepository.findByEmail(request.getEmail());
+        if (userOptional.isPresent()){
+            throw new BadRequestException("Email đã tồn tại");
+        }
+        User user=User.builder()
+                .name(request.getName())
+                .email(request.getEmail())
+                .avatar("https://placehold.co/600x400?text=" + request.getName())
+                .role(request.getRole())
+                .password(passwordEncoder.encode("123"))
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+        return userRepository.save(user);
     }
 }

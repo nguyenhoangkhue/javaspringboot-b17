@@ -1,4 +1,3 @@
-// Xử lý validate form
 $('#form-update-user').validate({
     rules: {
         name: {

@@ -3,6 +3,7 @@ package com.example.javaspringbootb17.service;
 import com.example.javaspringbootb17.entity.User;
 import com.example.javaspringbootb17.repsitory.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +16,6 @@ public class AdminService {
         return userRepository.findUserById(id).orElse(null);
     }
     public List<User> getAllUsers(){
-        return userRepository.findAll();
+        return userRepository.findAll(Sort.by("createdAt").descending());
     }
 }

@@ -2,14 +2,10 @@ package com.example.javaspringbootb17.controller;
 
 import com.example.javaspringbootb17.entity.*;
 import com.example.javaspringbootb17.model.enums.MovieType;
-import com.example.javaspringbootb17.repsitory.UserRepository;
 import com.example.javaspringbootb17.service.FavoriteService;
 import com.example.javaspringbootb17.service.WebService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
