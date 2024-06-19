@@ -171,31 +171,30 @@
                 <table class="table table-bordered table-hover">
                   <thead>
                   <tr>
-                    <th>Tiêu đề</th>
-                    <th>Tác giả</th>
-                    <th>Danh mục</th>
-                    <th>Trạng thái</th>
+                    <th>Avatar</th>
+                    <th>Họ tên</th>
+                    <th>Email</th>
+                    <th>Role</th>
                     <th>Ngày tạo</th>
                   </tr>
                   </thead>
                   <tbody>
-                  <tr>
+                  <tr th:each="user : ${users}">
                     <td>
-                      <a href="./blog-detail.html">Khai giảng khóa
-                        Java Spring Boot 12A
-                        - song song 2 hình
-                        thức offline /
-                        online đáp ứng nhu
-                        cầu đào tạo từ xa</a>
+                      <img th:src="${user.avatar}" th:alt="user.name">
                     </td>
                     <td>
-                      <a href="#">John Doe</a>
+                      <a th:href="@{/admin/users/{id}/details (id=${user.id})}" th:text="${user.name}"></a>
                     </td>
                     <td>
-                      Java, Golang, Springboot
+                      <p th:text="${user.email}"></p>
                     </td>
-                    <td>Công khai</td>
-                    <td>06-07-2022</td>
+                    <td>
+                      <p th:text="${user.role}"></p>
+                    </td>
+                    <td>
+                      <p th:date="${user.createdAt}"></p>
+                    </td>
                   </tr>
                   </tbody>
                 </table>

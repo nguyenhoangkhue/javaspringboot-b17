@@ -8,12 +8,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 public class AdminController {
-    AdminService adminService;
+    private final AdminService adminService;
     @GetMapping("/admin/users")
     public String users(Model model) {
+        List<User> users=adminService.getAllUsers();
+        model.addAttribute("users",users);
         return "admin/user/index";
     }
 
@@ -25,8 +29,8 @@ public class AdminController {
     @GetMapping("/admin/users/{id}/detail")
     public String detail(@PathVariable Integer id,
                          Model model) {
-//        User user=adminService.getUserDetail(id);
-//        model.addAttribute("user",user);
+        User user=adminService.getUserDetail(id);
+        model.addAttribute("user",user);
         return "admin/user/detail";
     }
 
