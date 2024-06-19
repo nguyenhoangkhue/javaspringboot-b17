@@ -25,8 +25,8 @@ public class AdminController {
     @GetMapping("/admin/users/{id}/detail")
     public String detail(@PathVariable Integer id,
                          Model model) {
-        User user=adminService.getUserDetail(id);
-        model.addAttribute("user",user);
+//        User user=adminService.getUserDetail(id);
+//        model.addAttribute("user",user);
         return "admin/user/detail";
     }
 
