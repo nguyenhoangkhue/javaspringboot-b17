@@ -22,8 +22,12 @@
   <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/highlight.js/latest/styles/github.min.css" />
 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"
+        integrity="sha512-vKMx8UnXk60zUwyUnUPM3HbQo8QfmNx7+ltw8Pm5zLusl1XIfwcxo8DbWCqMGKaWeNxWA8yrx5v3SaVpMvR3CA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"/>
+
   <link rel="stylesheet" href="/admin-assets/plugins/select2/css/select2.min.css" />
-  <link rel="stylesheet" href="/admin-assets/dist/css/style.css">
+  <link rel="stylesheet" th:href="@{/web-assets/css/style.css}">
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -169,10 +173,10 @@
             <button type="button" class="btn btn-default">
               <i class="fas fa-chevron-left"></i> Quay lại
             </button>
-            <button type="button" class="btn btn-info px-4">
+            <button type="button" class="btn btn-info px-4" id="btn-update">
               Cập nhật
             </button>
-            <button type="button" class="btn btn-warning px-4">
+            <button type="button" class="btn btn-warning px-4" id="btn-reset-password">
               Reset Mật khẩu
             </button>
           </div>
@@ -194,7 +198,7 @@
                       <div class="form-group mb-3">
                         <label class="form-label">Email</label>
                         <input type="text" class="form-control" id="email" name="email"
-                               th:value="${user.email}" disabled/>
+                               th:value="${user.email}"/>
                       </div>
                       <div class="form-group">
                         <label>Role</label>
@@ -252,6 +256,7 @@
   </div>
 </div>
 
+
 <!-- jQuery -->
 <script src="/admin-assets/plugins/jquery/jquery.min.js"></script>
 
@@ -261,13 +266,89 @@
 <!-- overlayScrollbars -->
 <script src="/admin-assets/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
 
-<!-- AdminLTE App -->
-<script src="/admin-assets/dist/js/adminlte.js"></script>
-
 <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
 <script src="https://cdn.jsdelivr.net/highlight.js/latest/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
+        integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js"
+        integrity="sha512-WMEKGZ7L5LWgaPeJtw9MBM4i5w5OSBlSjTjCtSnvFJGSVD26gE5+Td12qN5pvWXhuWaWcVwF++F7aqu9cvqP0A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/additional-methods.min.js"
+        integrity="sha512-TiQST7x/0aMjgVTcep29gi+q5Lk5gVTUPE9XgN0g96rwtjEjLpod4mlBRKWHeBcvGBAEvJBmfDqh2hfMMmg+5A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!-- AdminLTE App -->
+<script src="/admin-assets/dist/js/adminlte.js"></script>
+<script src="/web-assets/js/common.js"></script>
+<script>
+  $('#form-update-user').validate({
+    rules: {
+      name: {
+        required: true
+      },
+      email: {
+        required: true
+      },
+    },
+    messages: {
+      name: {
+        required: "Tên user không được để trống"
+      },
+      email:{
+        required: "Email không được để trống",
+        email: "Email không đúng định dạng"
+      }
+    },
+    errorElement: 'span',
+    errorPlacement: function (error, element) {
+      error.addClass('invalid-feedback');
+      element.closest('.form-group').append(error);
+    },
+    highlight: function (element, errorClass, validClass) {
+      $(element).addClass('is-invalid');
+    },
+    unhighlight: function (element, errorClass, validClass) {
+      $(element).removeClass('is-invalid');
+    }
+  });
 
-<script src="/admin-assets/plugins/select2/js/select2.full.min.js"></script>
+  const btnUpdate = document.getElementById('btn-update');
+  const nameEl = document.getElementById('name');
+  const emailEl = document.getElementById('email');
+  btnUpdate.addEventListener('click', () => {
+    if (!$('#form-update-user').valid()) return;
+
+    const data = {
+      name: nameEl.value,
+      email: emailEl.value
+    }
+    axios.put("/api/admin/users/{id}", data)
+            .then(res => {
+              toastr.success("Cập nhật thông tin user thành công");
+              setTimeout(()=>{
+                window.location.href=`admin/users/{id}/detail`
+              },1500)
+            })
+            .catch(err => {
+              toastr.error("Cập nhật thông tin user thất bại");
+            })
+  })
+
+  const btnResetPassword = document.getElementById('btn-reset-password');
+  btnResetPassword.addEventListener('click', () => {
+    const data = {
+      password: 123
+    }
+    axios.post("/api/admin/users/{id}/reset-password", data)
+            .then(res => {
+              toastr.success("Reset mật khẩu thành công");
+            })
+            .catch(err => {
+              toastr.error("Reset mật khẩu thất bại");
+            })
+  })
+</script>
 </body>
 
 </html>

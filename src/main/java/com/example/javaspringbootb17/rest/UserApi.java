@@ -1,8 +1,6 @@
 package com.example.javaspringbootb17.rest;
 
-import com.example.javaspringbootb17.model.request.CreateUserRequest;
-import com.example.javaspringbootb17.model.request.UpdatePasswordRequest;
-import com.example.javaspringbootb17.model.request.UpdateProfileRequest;
+import com.example.javaspringbootb17.model.request.*;
 import com.example.javaspringbootb17.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,5 +27,17 @@ public class UserApi {
     @PostMapping("/admin/users")
     ResponseEntity<?> createUser(@Valid @RequestBody CreateUserRequest request){
         return ResponseEntity.ok(userService.createUser(request));
+    }
+    @PutMapping("/admin/users/{id}")
+    ResponseEntity<?> adminUpdateProfile( @Valid @RequestBody AdminUpdateProfileRequest request,
+                                         @PathVariable Integer id) {
+        userService.adminUpdateProfile(request,id);
+        return ResponseEntity.ok().build();
+    }
+    @PostMapping("/admin/users/{id}/reset-password")
+    ResponseEntity<?> resetPassword(@Valid @RequestBody
+                                    @PathVariable Integer id) {
+        userService.resetPassword(id);
+        return ResponseEntity.ok().build();
     }
 }

@@ -3,9 +3,8 @@ package com.example.javaspringbootb17.service;
 
 import com.example.javaspringbootb17.entity.User;
 import com.example.javaspringbootb17.exception.BadRequestException;
-import com.example.javaspringbootb17.model.request.CreateUserRequest;
-import com.example.javaspringbootb17.model.request.UpdatePasswordRequest;
-import com.example.javaspringbootb17.model.request.UpdateProfileRequest;
+import com.example.javaspringbootb17.exception.ResourceNotFoundException;
+import com.example.javaspringbootb17.model.request.*;
 import com.example.javaspringbootb17.repsitory.UserRepository;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -60,5 +59,17 @@ public class UserService {
                 .updatedAt(LocalDateTime.now())
                 .build();
         return userRepository.save(user);
+    }
+    public void adminUpdateProfile(AdminUpdateProfileRequest request, Integer id) {
+        User user = userRepository.findUserById(id).orElseThrow(()->new ResourceNotFoundException("User not found"));
+        user.setName(request.getName());
+
+        userRepository.save(user);
+    }
+    public void resetPassword(Integer id) {
+        User user = userRepository.findUserById(id).orElseThrow(()->new ResourceNotFoundException("User not found"));
+        user.setPassword(passwordEncoder.encode("123"));
+
+        userRepository.save(user);
     }
 }
