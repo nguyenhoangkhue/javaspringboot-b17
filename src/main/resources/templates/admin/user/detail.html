@@ -258,6 +258,9 @@
 
 
 <!-- jQuery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="/admin-assets/plugins/jquery/jquery.min.js"></script>
 
 <!-- Bootstrap 4 -->
@@ -338,7 +341,7 @@
   const btnResetPassword = document.getElementById('btn-reset-password');
   btnResetPassword.addEventListener('click', () => {
     const data = {
-      password: 123
+      password: "123"
     }
     axios.post("/api/admin/users/{id}/reset-password", data)
             .then(res => {

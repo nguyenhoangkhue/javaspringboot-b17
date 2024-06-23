@@ -38,4 +38,5 @@ public interface MovieRepository extends JpaRepository<Movie,Integer> {
     List<Movie> findTop10ByStatusOrderByRatingDesc(Boolean status);
     Optional<Movie> findByStatusAndIdAndSlug(Boolean status,Integer id,String slug);
     List<Movie> findTop6ByTypeAndStatusAndIdNotOrderByRatingDesc(MovieType type,Boolean status,Integer id);
+    Optional<Movie> findMovieById(Integer id);
 }

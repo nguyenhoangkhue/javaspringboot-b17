@@ -291,6 +291,21 @@ class JavaspringbootB17ApplicationTests {
 		}
 	}
 	@Test
+	void save_admin() {
+		Faker faker = new Faker();
+			String name = faker.name().fullName();
+			User user = User.builder()
+					.name(name)
+					.email(faker.internet().emailAddress())
+					.avatar("https://placehold.co/600x400?text=" + name)
+					.password("123")
+					.role(Role.Admin)
+					.createdAt(LocalDateTime.now())
+					.updatedAt(LocalDateTime.now())
+					.build();
+			userRepository.save(user);
+	}
+	@Test
 	void encode_password_user(){
 		List<User>users=userRepository.findAll();
 		for (User user:users){
