@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
 
@@ -285,28 +284,25 @@
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-content-center mb-3">
                                     <h4>Danh sách tập phim</h4>
-                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                            data-bs-target="#modalPassword">
-                                        Tạo tập phim
-                                    </button>
+                                    <button class="btn btn-primary" onclick="openModalCreateEpisode()">Tạo tập phim</button>
                                 </div>
-                                <table class="table table-bordered table-hover" id="table-user">
+                                <table class="table table-bordered table-hover" id="table-episode">
                                     <thead>
                                     <tr>
                                         <th>#</th>
                                         <th>Tên tập phim</th>
-                                        <th>Link</th>
+                                        <th style="width: 50%">Link</th>
                                         <th>Thời lượng</th>
                                         <th>Trạng thái</th>
                                         <th></th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr th:each="episode : ${episodes}" th:id="${episode.id}">
+                                    <tr th:each="episode : ${episodes}">
                                         <td th:text="${episode.displayOrder}"></td>
                                         <td th:text="${episode.name}"></td>
-                                        <td th:text="${episode.videoUrl}" class="videoUrl"></td>
-                                        <td th:text="${episode.duration}" class="duration"></td>
+                                        <td th:text="${episode.videoUrl != null ? episode.videoUrl : 'Chưa cập nhật'}" class="videoUrl"></td>
+                                        <td th:text="${episode.duration != null ? episode.duration : 'Chưa cập nhật'}" class="duration"></td>
                                         <td th:text="${episode.status ? 'Công khai' : 'Ẩn'}"></td>
                                         <td>
                                             <label class="btn btn-warning btn-sm mb-0" th:for="|input-video-${episode.id}|">
@@ -321,10 +317,8 @@
                                             <button class="btn btn-primary btn-sm" th:onclick="|showEpisodePreview(${episode.id})|">
                                                 <i class="fas fa-play"></i>
                                             </button>
-                                            <button class="btn btn-success btn-sm"><i class="fas fa-pencil-alt"></i></button>
-                                            <button class="btn btn-danger btn-sm" id="delete-episode" th:episode-id="${episode.id}">
-                                                <i class="fas fa-trash-alt" ></i>
-                                            </button>
+                                            <button class="btn btn-success btn-sm" th:onclick="|openModalUpdateEpisode(${episode.id})|"><i class="fas fa-pencil-alt"></i></button>
+                                            <button class="btn btn-danger btn-sm" th:onclick="|deleteEpisode(${episode.id})|"><i class="fas fa-trash-alt"></i></button>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -357,38 +351,41 @@
     </div>
 </div>
 
-<div class="modal fade" id="modal-create-episode" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-     aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+<div class="modal fade" id="modalEpisode">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">Tạo tập phim</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h4 class="modal-title">Default Modal</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
             </div>
             <div class="modal-body">
-                <form id="form-create-episode">
+                <form id="form-episode">
                     <div class="form-group">
                         <label>Tên tập phim</label>
-                        <input type="text" class="form-control" id="episodeName" name="episodeName"/>
+                        <input type="text" class="form-control" id="episodeName" name="name" />
                     </div>
                     <div class="form-group">
-                        <label>Số thứ tự tập phim</label>
-                        <input type="text" class="form-control" id="displayOrder" name="displayOrder"/>
+                        <label>Tập số bao nhiêu</label>
+                        <input type="text" class="form-control" id="episodeDisplayOrder" name="displayOrder" />
                     </div>
                     <div class="form-group">
                         <label>Trạng thái</label>
-                        <select class="form-control" id="newEpisodeStatus" name="newEpisodeStatus">
-                            <option value="false" selected="selected">Ẩn</option>
+                        <select class="form-control" id="episodeStatus" name="status">
+                            <option value="false">Ẩn</option>
                             <option value="true">Công khai</option>
                         </select>
                     </div>
-                    <div class="mb-3 d-flex justify-content-end">
-                        <button type="submit" class="btn btn-primary" id="btn-create-episode">Tạo tập phim</button>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Xác nhận</button>
                     </div>
                 </form>
             </div>
         </div>
+
     </div>
+
 </div>
 
 <!-- jQuery -->
@@ -412,256 +409,11 @@
 
 <script th:inline="javascript">
     const movie = [[${movie}]];
-    const episodes = [[${episodes}]];
-
+    let episodes = [[${episodes}]];
     $(".select2").select2();
-
-    // Cập nhật thông tin phim
-    $('#form-update-movie').validate({
-        rules: {
-            name: {
-                required: true
-            },
-            trailerURL: {
-                required: true
-            },
-            description: {
-                required: true
-            },
-            releaseYear: {
-                required: true
-            },
-            type: {
-                required: true
-            },
-            status: {
-                required: true
-            },
-            country: {
-                required: true
-            }
-        },
-        messages: {
-            name: {
-                required: "Tên không được để trống"
-            },
-            trailerURL: {
-                required: "Trailer URL không được để trống"
-            },
-            description: {
-                required: "Mô tả không được để trống"
-            },
-            releaseYear: {
-                required: "Năm phát hành không được để trống"
-            },
-            type: {
-                required: "Loại phim không được để trống"
-            },
-            status: {
-                required: "Trạng thái không được để trống"
-            },
-            country: {
-                required: "Quốc gia không được để trống"
-            }
-        },
-        errorElement: 'span',
-        errorPlacement: function (error, element) {
-            error.addClass('invalid-feedback');
-            element.closest('.form-group').append(error);
-        },
-        highlight: function (element, errorClass, validClass) {
-            $(element).addClass('is-invalid');
-        },
-        unhighlight: function (element, errorClass, validClass) {
-            $(element).removeClass('is-invalid');
-        }
-    });
-
-    const btnUpdate = document.getElementById('btn-update');
-    btnUpdate.addEventListener('click', () => {
-        if (!$('#form-update-movie').valid()) return;
-
-        const data = {
-            name: document.getElementById('name').value,
-            trailerURL: document.getElementById('trailerURL').value,
-            description: document.getElementById('description').value,
-            genreIds: $('#genre').val().map(e => Number(e)), // get value of select2 using jquery syntax
-            directorIds: $('#director').val().map(e => Number(e)),
-            actorIds: $('#actor').val().map(e => Number(e)),
-            releaseYear: Number(document.getElementById('releaseYear').value),
-            type: document.getElementById('type').value,
-            status: document.getElementById('status').value === 'true',
-            countryId: Number(document.getElementById('country').value)
-        }
-
-        axios.put(`/api/admin/movies/${movie.id}/update`, data)
-            .then(res => {
-                toastr.success("Cập nhật thông tin phim thành công");
-            })
-            .catch(err => {
-                toastr.error(err.response.data.message);
-            })
-    })
-
-    // Xóa movie
-    const btnDelete = document.getElementById('btn-delete');
-    btnDelete.addEventListener('click', () => {
-        const isConfirm = window.confirm("Bạn có chắc chắn muốn xóa phim này không?");
-        if (!isConfirm) return;
-
-        axios.delete(`/api/admin/movies/${movie.id}/delete`)
-            .then(res => {
-                toastr.success("Xóa phim thành công");
-                setTimeout(() => {
-                    window.location.href = '/admin/movies';
-                }, 1500);
-            })
-            .catch(err => {
-                toastr.error(err.response.data.message);
-            })
-    })
-
-    // Show trailer preview
-    const showEpisodePreview = (episodeId) => {
-        const episode = episodes.find(e => e.id === episodeId);
-        $('#modalPreview').modal('show');
-
-        const video = document.querySelector('#modalPreview video');
-        video.src = episode.videoUrl;
-    }
-
-    $('#modalPreview').on('hidden.bs.modal', function (event) {
-        const video = document.querySelector('#modalPreview video');
-        video.src = "";
-    })
-
-    // Upload poster
-    const inputPoster = document.getElementById('input-poster');
-    const thumbnail = document.getElementById('thumbnail');
-
-    inputPoster.addEventListener("change", (e) => {
-        const file = e.target.files[0];
-
-        const formData = new FormData();
-        formData.append('file', file);
-
-        axios.post(`/api/admin/movies/${movie.id}/upload-poster`, formData)
-            .then(res => {
-                thumbnail.src = res.data;
-                toastr.success("Upload hình ảnh thành công");
-            })
-            .catch(err => {
-                toastr.error(err.response.data.message);
-            })
-    })
-
-    // Upload episode video
-    const uploadEpisodeVideo = (episodeId, event) => {
-        const file = event.target.files[0];
-
-        const formData = new FormData();
-        formData.append('file', file);
-
-        axios.post(`/api/admin/episodes/${episodeId}/upload-video`, formData)
-            .then(res => {
-                const episodeEl = document.getElementById(episodeId);
-                const videoUrlEl = episodeEl.querySelector('.videoUrl');
-                const durationEl = episodeEl.querySelector('.duration');
-                videoUrlEl.textContent = res.data.videoUrl;
-                durationEl.textContent = res.data.duration;
-
-                const index = episodes.findIndex(e => e.id === Number(episodeId));
-                episodes[index] = res.data;
-
-                toastr.success("Upload video thành công");
-            })
-            .catch(err => {
-                toastr.error(err.response.data.message);
-            })
-    }
-    $('#form-create-episode').validate({
-        rules: {
-            episodeName: {
-                required: true
-            },
-            displayOrder: {
-                required: true
-            },
-            newEpisodeStatus: {
-                required: true
-            },
-        },
-        messages: {
-            episodeName: {
-                required: "Tên không được để trống"
-            },
-            displayOrder: {
-                required: "Thứ tự tập phim không được để trống"
-            },
-            newEpisodeStatus: {
-                required: "Trạng thái không được để trống"
-            },
-        },
-        errorElement: 'span',
-        errorPlacement: function (error, element) {
-            error.addClass('invalid-feedback');
-            element.closest('.form-group').append(error);
-        },
-        highlight: function (element, errorClass, validClass) {
-            $(element).addClass('is-invalid');
-        },
-        unhighlight: function (element, errorClass, validClass) {
-            $(element).removeClass('is-invalid');
-        }
-    });
-    const btnCreateEpisode = document.getElementById('btn-create-episode');
-    const episodeNameEl = document.getElementById('episodeName');
-    const displayOrderEl = document.getElementById('displayOrder');
-    const newEpisodeStatusEl = document.getElementById('newEpisodeStatus');
-    btnCreateEpisode.addEventListener('click', () => {
-        if (!$('#form-update-password').valid()) return;
-
-        const data = {
-            episodeName: episodeNameEl.value,
-            displayOrder: displayOrderEl.value,
-            newEpisodeStatus: newEpisodeStatusEl.value,
-        }
-        axios.post(`/api/admin/episodes/${movie.id}/create`, data)
-            .then(res => {
-                toastr.success("Tạo tập phim thành công");
-            })
-            .catch(err => {
-                toastr.error("Tạo tập phim thất bại");
-            })
-    })
-
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('#delete-episode').forEach(function(element) {
-            element.addEventListener('click', function(event) {
-                event.preventDefault();
-                deleteEpisode(this);
-            });
-        });
-    });
-
-    function deleteEpisode(element) {
-        const episodeId = element.getAttribute('episode-id');
-        const isConfirm = window.confirm("Bạn có chắc chắn muốn xóa tập phim này không?");
-        if (!isConfirm) return;
-
-        axios.delete(`/api/admin/episodes/${episodeId}/delete`)
-            .then(res => {
-                toastr.success("Xóa tập phim thành công");
-                setTimeout(() => {
-                    window.location.href = `/admin/movies/${movie.id}/detail`;
-                }, 1500);
-            })
-            .catch(err => {
-                toastr.error(err.response.data.message);
-            })
-    }
 </script>
 
+<script src="/admin-assets/dist/js/js.movie/movie-detail.js"></script>
 </body>
 
 </html>

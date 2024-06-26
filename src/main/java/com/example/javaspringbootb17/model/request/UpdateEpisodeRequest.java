@@ -10,13 +10,11 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CreateEpisodeRequest {
+public class UpdateEpisodeRequest {
     @NotEmpty(message = "Tên tập phim không được để trống")
     String name;
     @NotNull(message = "Số thứ tự tập phim không được để trống")
     Integer displayOrder;
     @NotNull(message = "Trạng thái tập phim phim không được để trống")
     Boolean status;
-    @NotNull(message = "Id phim không được để trống")
-    Integer movieId;
 }

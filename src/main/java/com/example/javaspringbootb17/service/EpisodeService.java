@@ -2,8 +2,10 @@ package com.example.javaspringbootb17.service;
 
 import com.example.javaspringbootb17.entity.Episode;
 import com.example.javaspringbootb17.entity.Movie;
+import com.example.javaspringbootb17.exception.BadRequestException;
 import com.example.javaspringbootb17.exception.ResourceNotFoundException;
 import com.example.javaspringbootb17.model.request.CreateEpisodeRequest;
+import com.example.javaspringbootb17.model.request.UpdateEpisodeRequest;
 import com.example.javaspringbootb17.repsitory.EpisodeRepository;
 import com.example.javaspringbootb17.repsitory.MovieRepository;
 import lombok.RequiredArgsConstructor;
@@ -51,20 +53,47 @@ public class EpisodeService {
             throw new RuntimeException("Lỗi khi upload video");
         }
     }
-    public Episode createEpisode(Integer id, CreateEpisodeRequest request){
-        Movie movie = movieRepository.findMovieById(id).orElseThrow(()->new ResourceNotFoundException("Movie not found"));
-        Episode episode=Episode.builder()
+    public Episode createEpisode(CreateEpisodeRequest request) {
+        Movie movie = movieRepository.findById(request.getMovieId())
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy phim với id " + request.getMovieId()));
+
+        if (episodeRepository.existsByMovie_IdAndDisplayOrder(movie.getId(), request.getDisplayOrder())) {
+            throw new BadRequestException("Thứ tự tập phim không được trùng nhau");
+        }
+
+        Episode episode = Episode.builder()
                 .name(request.getName())
                 .displayOrder(request.getDisplayOrder())
                 .status(request.getStatus())
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
+                .publishedAt(request.getStatus() ? LocalDateTime.now() : null)
+                .movie(movie)
                 .build();
         return episodeRepository.save(episode);
     }
+
+    public Episode updateEpisode(Integer id, UpdateEpisodeRequest request) {
+        Episode episode = episodeRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy tập phim có id = " + id));
+
+        if (!episode.getDisplayOrder().equals(request.getDisplayOrder()) && episodeRepository.existsByMovie_IdAndDisplayOrder(episode.getMovie().getId(), request.getDisplayOrder())) {
+            throw new BadRequestException("Thứ tự tập phim không được trùng nhau");
+        }
+
+        episode.setName(request.getName());
+        episode.setDisplayOrder(request.getDisplayOrder());
+        episode.setStatus(request.getStatus());
+        episode.setUpdatedAt(LocalDateTime.now());
+        episode.setPublishedAt(request.getStatus() ? LocalDateTime.now() : null);
+        return episodeRepository.save(episode);
+    }
+
     public void deleteEpisode(Integer id) {
-        Episode episode=episodeRepository.findById(id)
-                .orElseThrow(()->new ResourceNotFoundException("Episode not found"));
-        episodeRepository.deleteById(id);
+        Episode episode = episodeRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy tập phim có id = " + id));
+
+        // TODO: Xóa video trên cloudinary
+        episodeRepository.delete(episode);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.javaspringbootb17.rest;
 
 import com.example.javaspringbootb17.model.request.CreateEpisodeRequest;
+import com.example.javaspringbootb17.model.request.UpdateEpisodeRequest;
 import com.example.javaspringbootb17.service.EpisodeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,13 +19,18 @@ public class EpisodeApi {
     ResponseEntity<?> uploadVideo(@PathVariable Integer id, @RequestParam MultipartFile file) {
         return ResponseEntity.ok(episodeService.uploadVideo(id, file));
     }
-    @PostMapping("/{id}/create")
-    ResponseEntity<?> createEpisode(@Valid @PathVariable Integer id,
-                                    @RequestParam CreateEpisodeRequest request) {
-        return ResponseEntity.ok(episodeService.createEpisode(id,request));
+    @PostMapping
+    ResponseEntity<?> createEpisode(@Valid @RequestBody CreateEpisodeRequest request) {
+        return ResponseEntity.ok(episodeService.createEpisode(request));
     }
-    @DeleteMapping("/{id}/delete")
-    public ResponseEntity<?> deleteEpisode(@PathVariable Integer id){
+
+    @PutMapping("/{id}")
+    ResponseEntity<?> updateEpisode(@Valid @RequestBody UpdateEpisodeRequest request, @PathVariable Integer id) {
+        return ResponseEntity.ok(episodeService.updateEpisode(id, request));
+    }
+
+    @DeleteMapping("/{id}")
+    ResponseEntity<?> deleteEpisode(@PathVariable Integer id) {
         episodeService.deleteEpisode(id);
         return ResponseEntity.ok().build();
     }
