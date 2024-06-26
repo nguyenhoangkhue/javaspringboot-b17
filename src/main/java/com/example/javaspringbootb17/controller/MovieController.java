@@ -1,10 +1,8 @@
 package com.example.javaspringbootb17.controller;
 
 import com.example.javaspringbootb17.entity.Movie;
-import com.example.javaspringbootb17.repsitory.ActorRepository;
-import com.example.javaspringbootb17.repsitory.CountryRepository;
-import com.example.javaspringbootb17.repsitory.DirectorRepository;
-import com.example.javaspringbootb17.repsitory.GenreRepository;
+import com.example.javaspringbootb17.repsitory.*;
+import com.example.javaspringbootb17.service.EpisodeService;
 import com.example.javaspringbootb17.service.MovieService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -22,6 +20,7 @@ public class MovieController {
     private final ActorRepository actorRepository;
     private final GenreRepository genreRepository;
     private final CountryRepository countryRepository;
+    private final EpisodeService episodeService;
     @GetMapping("/admin/movies")
     public String movies(Model model) {
         List<Movie> movies=movieService.getAllMovies();
@@ -45,6 +44,7 @@ public class MovieController {
         model.addAttribute("actors",actorRepository.findAll());
         model.addAttribute("genres",genreRepository.findAll());
         model.addAttribute("countries",countryRepository.findAll());
+        model.addAttribute("episodes", episodeService.getEpisodeListOfMovieByAdmin(id));
         Movie movie=movieService.getMovieDetail(id);
         model.addAttribute("movie",movie);
         return "admin/movie/detail";

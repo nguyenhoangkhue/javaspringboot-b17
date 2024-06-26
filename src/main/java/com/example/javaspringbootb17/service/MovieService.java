@@ -2,11 +2,7 @@ package com.example.javaspringbootb17.service;
 
 import com.example.javaspringbootb17.entity.Country;
 import com.example.javaspringbootb17.entity.Movie;
-import com.example.javaspringbootb17.entity.Review;
-import com.example.javaspringbootb17.entity.User;
-import com.example.javaspringbootb17.exception.BadRequestException;
 import com.example.javaspringbootb17.exception.ResourceNotFoundException;
-import com.example.javaspringbootb17.model.enums.MovieType;
 import com.example.javaspringbootb17.model.request.CreateMovieRequest;
 import com.example.javaspringbootb17.model.request.UpdateMovieRequest;
 import com.example.javaspringbootb17.repsitory.*;
@@ -14,9 +10,11 @@ import com.github.slugify.Slugify;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +24,7 @@ public class MovieService {
     private final GenreRepository genreRepository;
     private final ActorRepository actorRepository;
     private final DirectorRepository directorRepository;
+    private final CloudinaryService cloudinaryService;
     Slugify slugify= Slugify.builder().build();
     public List<Movie>getAllMovies(){
         return movieRepository.findAll(Sort.by(("createdAt")).descending());
@@ -67,6 +66,11 @@ public class MovieService {
         movie.setStatus(request.getStatus());
         movie.setCountry(country);
         movie.setSlug(slugify.slugify(request.getName()));
+        movie.setGenres(genreRepository.findAllById(request.getGenreIds()));
+        movie.setDirectors(directorRepository.findAllById(request.getDirectorIds()));
+        movie.setActors(actorRepository.findAllById(request.getActorIds()));
+        movie.setUpdatedAt(LocalDateTime.now());
+        movie.setPublishedAt(request.getStatus()?LocalDateTime.now():null);
 
         return movieRepository.save(movie);
     }
@@ -74,6 +78,18 @@ public class MovieService {
         Movie movie=movieRepository.findById(id)
                 .orElseThrow(()->new ResourceNotFoundException("Movie not found"));
         movieRepository.deleteById(id);
+    }
+    public String uploadPoster(Integer id, MultipartFile file){
+        Movie movie=movieRepository.findById(id)
+                .orElseThrow(()-> new ResourceNotFoundException("Không tìm thấy phim"));
+        try{
+            Map result=cloudinaryService.uploadFile(file);
+            System.out.println(result);
+            movie.setPoster((String) result.get("url"));
+            return (String) result.get("url");
+        }catch (Exception e){
+            throw new RuntimeException("Lỗi khi upload Poster");
+        }
     }
 }
 

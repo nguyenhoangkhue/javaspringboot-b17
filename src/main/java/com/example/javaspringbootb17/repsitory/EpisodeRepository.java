@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface EpisodeRepository extends JpaRepository<Episode, Integer> {
     List<Episode>findByMovie_IdAndStatusOrderByDisplayOrderAsc(Integer movieId,Boolean status);
     Optional <Episode> findByMovie_IdAndStatusAndDisplayOrder(Integer movieId, Boolean status, Integer order);
+    List<Episode>findByMovie_IdOrderByDisplayOrderAsc(Integer movieId);
 }

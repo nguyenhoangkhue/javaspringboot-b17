@@ -410,9 +410,9 @@
             trailerURL: document.getElementById('trailerURL').value,
             description: document.getElementById('description').value,
             type: document.getElementById('type').value,
-            genreIds: $('#genre').val().map(e=>Number),
-            directorIds: $('#director').val().map(e=>Number),
-            actorIds: $('#actor').val().map(e=>Number),
+            genreIds: $('#genre').val().map(e=>Number(e)),
+            directorIds: $('#director').val().map(e=>Number(e)),
+            actorIds: $('#actor').val().map(e=>Number(e)),
             releaseYear: document.getElementById('releaseYear').value,
             status: document.getElementById('status').value==='true',
             countryId:Number(document.getElementById('country').value)

@@ -1,6 +1,7 @@
 package com.example.javaspringbootb17.entity;
 
 import com.example.javaspringbootb17.model.enums.MovieType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -69,4 +70,8 @@ public class Movie {
             inverseJoinColumns = @JoinColumn(name = "director_id")
     )
     private List<Director> directors;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "movie",cascade = CascadeType.REMOVE)
+    List<Review>reviews;
 }
